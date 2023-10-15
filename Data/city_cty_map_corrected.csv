@@ -1,0 +1,190 @@
+,city,country,country_corrected
+0,Edinburgh,United Kingdom,Scotland
+1,Belfast,United Kingdom,Ireland
+2,,,
+3,Colombo,Sri Lanka,Sri Lanka
+4,Colombo,Brazil,
+5,Centurion,South Africa,South Africa
+6,Cape Town,South Africa,South Africa
+7,Johannesburg,South Africa,South Africa
+8,Durban,South Africa,South Africa
+9,Port Elizabeth,South Africa,South Africa
+10,Benoni,South Africa,South Africa
+11,Barbados,,West Indies
+12,St Kitts,,West Indies
+13,Guyana,,West Indies
+14,Mirpur,,Bangladesh
+15,Bulawayo,Zimbabwe,Zimbabwe
+16,Auckland,New Zealand,New Zealand
+17,Hamilton,Bermuda,
+18,Hamilton,Canada,
+19,Hamilton,New Zealand,New Zealand
+20,Hamilton,United Kingdom,
+21,Hamilton,United States,
+22,Hamilton,Australia,
+23,Wellington,New Zealand,New Zealand
+24,Wellington,United Kingdom,
+25,Wellington,United States,
+26,Wellington,India,
+27,Mount Maunganui,,New Zealand
+28,Nelson,New Zealand,New Zealand
+29,Nelson,United Kingdom,
+30,Nelson,Canada,
+31,Christchurch,New Zealand,New Zealand
+32,Christchurch,United Kingdom,
+33,Cardiff,,England
+34,Leeds,United Kingdom,England
+35,Leeds,United States,
+36,Nottingham,United Kingdom,England
+37,London,United Kingdom,England
+38,London,Canada,
+39,London,United States,
+40,Southampton,United Kingdom,England
+41,Southampton,United States,
+42,Dublin,Ireland,Ireland
+43,Dublin,United States,
+44,Bristol,United Kingdom,England
+45,Bristol,United States,
+46,Birmingham,United Kingdom,England
+47,Birmingham,United States,
+48,Dubai,United Arab Emirates,United Arab Emirates
+49,Mumbai,India,India
+50,Chennai,India,India
+51,Rajkot,,India
+52,Indore,India,India
+53,Kanpur,,India
+54,Abu Dhabi,United Arab Emirates,United Arab Emirates
+55,Canberra,Australia,Australia
+56,Brisbane,Australia,Australia
+57,Perth,Australia,Australia
+58,Perth,United Kingdom,
+59,Lahore,Pakistan,Pakistan
+60,Hambantota,Sri Lanka,Sri Lanka
+61,Potchefstroom,South Africa,South Africa
+62,Chittagong,,Bangladesh
+63,Bloemfontein,South Africa,South Africa
+64,Ranchi,,India
+65,Kolkata,,India
+66,Hyderabad,,India
+67,Ahmedabad,India,India
+68,Cuttack,India,India
+69,Dharmasala,,India
+70,Delhi,India,India
+71,Delhi,United States,
+72,Kochi,India,India
+73,Hobart,Australia,Australia
+74,Hobart,United States,
+75,Napier,New Zealand,New Zealand
+76,Dunedin,New Zealand,New Zealand
+77,Dunedin,United States,
+78,Manchester,United Kingdom,England
+79,Manchester,United States,
+80,Chester-le-Street,United Kingdom,England
+81,Kuala Lumpur,Malaysia,Malaysia
+82,Grenada,United States,West Indies
+83,East London,South Africa,South Africa
+84,Fatullah,,Bangladesh
+85,Jamaica,,West Indies
+86,Lincoln,United States,New Zealand
+87,Lincoln,United Kingdom,
+88,Lincoln,Argentina,
+89,Lincoln,Canada,
+90,Aberdeen,United Kingdom,Scotland
+91,Aberdeen,United States,
+92,Visakhapatnam,,India
+93,Sydney,Australia,Australia
+94,Melbourne,Australia,Australia
+95,Melbourne,United States,
+96,Rawalpindi,Pakistan,Pakistan
+97,Karachi,Pakistan,Pakistan
+98,Peshawar,Pakistan,Pakistan
+99,Multan,Pakistan,Pakistan
+100,Amstelveen,Netherlands,Netherlands
+101,Pune,India,India
+102,Faridabad,,India
+103,Gwalior,India,India
+104,Dambulla,Sri Lanka,Sri Lanka
+105,Dhaka,Bangladesh,Bangladesh
+106,Canterbury,United Kingdom,England
+107,King City,United States,Canada
+108,Sharjah,United Arab Emirates,United Arab Emirates
+109,Adelaide,Australia,Australia
+110,Gqeberha,,South Africa
+111,Kimberley,South Africa,South Africa
+112,Paarl,South Africa,South Africa
+113,Nairobi,Kenya,Kenya
+114,Pietermaritzburg,South Africa,South Africa
+115,Harare,Zimbabwe,Zimbabwe
+116,Chattogram,Bangladesh,Bangladesh
+117,St George's,,West Indies
+118,Kingstown,Saint Vincent and the Grenadines,West Indies
+119,Gros Islet,Saint Lucia,West Indies
+120,Port of Spain,Trinidad and Tobago,West Indies
+121,Faisalabad,Pakistan,Pakistan
+122,Darwin,Australia,Australia
+123,Cairns,Australia,Australia
+124,Bridgetown,Barbados,West Indies
+125,Bridgetown,United States,
+126,Kingston,Jamaica,West Indies
+127,Kingston,Norfolk Island,
+128,Kingston,United States,
+129,Kingston,Australia,
+130,Queenstown,South Africa,New Zealand
+131,Queenstown,Australia,
+132,Bangalore,India,India
+133,Nagpur,,India
+134,Chandigarh,,India
+135,Jaipur,India,India
+136,St Lucia,,West Indies
+137,Antigua,Spain,West Indies
+138,Trinidad,Bolivia,West Indies
+139,Trinidad,Cuba,
+140,Trinidad,Philippines,
+141,Trinidad,Uruguay,
+142,Trinidad,Colombia,
+143,Khulna,Bangladesh,Bangladesh
+144,Dharamsala,,India
+145,St Vincent,,West Indies
+146,Whangarei,New Zealand,New Zealand
+147,Vadodara,India,India
+148,Guwahati,,India
+149,Toronto,Canada,Canada
+150,Ayr,United Kingdom,Scotland
+151,Ayr,Australia,
+152,Dominica,,West Indies
+153,Sind,,Pakistan
+154,Glasgow,United Kingdom,Ireland
+155,Glasgow,United States,
+156,Margao,,India
+157,Bogra,Bangladesh,Bangladesh
+158,Jamshedpur,India,India
+159,Kandy,Sri Lanka,Sri Lanka
+160,Tarouba,,West Indies
+161,Kirtipur,Nepal,Nepal
+162,Kathmandu,Nepal,Nepal
+163,Chelmsford,United Kingdom,England
+164,Chelmsford,United States,
+165,Windhoek,Namibia,Namibia
+166,Sylhet,Bangladesh,Bangladesh
+167,Raipur,India,India
+168,Thiruvananthapuram,India,India
+169,Port Moresby,Papua New Guinea,Papua New Guinea
+170,Lucknow,India,India
+171,Townsville,Australia,Australia
+172,Providence,United States,West Indies
+173,Pearland,United States,United States
+174,Rotterdam,Netherlands,Netherlands
+175,Rotterdam,United States,
+176,Al Amarat,,Oman
+177,Doha,Qatar,Qatar
+178,North Sound,,West Indies
+179,Utrecht,Netherlands,Netherlands
+180,Lauderhill,United States,United States
+181,Deventer,Netherlands,Netherlands
+182,Bengaluru,,India
+183,Bready,,Ireland
+184,Dehra Dun,,India
+185,Taunton,United Kingdom,England
+186,Taunton,United States,
+187,Greater Noida,,India
+188,Hong Kong,Hong Kong,Hong Kong
