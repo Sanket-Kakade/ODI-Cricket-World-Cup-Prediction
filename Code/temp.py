@@ -11,8 +11,8 @@ import os
 import glob
 
 #%%
-all_odi_data_loc= "K:\\Sanket-datascience\\CWC_prediction\\odis_male_csv2\\"
-all_cwc_data_loc= 'K:\\Sanket-datascience\\CWC_prediction\\icc_mens_cricket_world_cup_male_csv2\\'
+all_odi_data_loc= "K:\\Sanket-datascience\\CWC_prediction\\Data\\odis_male_csv2\\"
+all_cwc_data_loc= 'K:\\Sanket-datascience\\CWC_prediction\\Data\\icc_mens_cricket_world_cup_male_csv2\\'
 
 ls_odi_info_files= glob.glob(all_odi_data_loc+'*info.csv')
 ls_cwc_info_files= glob.glob(all_cwc_data_loc+'*info.csv')
@@ -25,25 +25,25 @@ ls_cwc_data_files= [i for i in ls_cwc_data_files if 'all_matches' not in i]
 
 #%%
 
-df_info_single= pd.read_csv(ls_odi_info_files[1799],skiprows=2,names= ["type", "subtype", "field", "player","code"])
-df_info_single.iloc[0,1]= 'team1'
-df_info_single.iloc[1,1]= 'team2'
+# df_info_single= pd.read_csv(ls_odi_info_files[1799],skiprows=2,names= ["type", "subtype", "field", "player","code"])
+# df_info_single.iloc[0,1]= 'team1'
+# df_info_single.iloc[1,1]= 'team2'
 
-df_info_single= df_info_single[df_info_single['field']!='people']
+# df_info_single= df_info_single[df_info_single['field']!='people']
 
-df_info_single.drop('code',axis=1,inplace=True)
+# df_info_single.drop('code',axis=1,inplace=True)
 
-team1_nm= df_info_single[df_info_single['subtype']=='team1']['field'].values[0]
-team2_nm= df_info_single[df_info_single['subtype']=='team2']['field'].values[0]
-team1_mapping= ['team1_p'+str(i) for i in range(1,12)]
-team2_mapping= ['team2_p'+str(i) for i in range(1,12)]
+# team1_nm= df_info_single[df_info_single['subtype']=='team1']['field'].values[0]
+# team2_nm= df_info_single[df_info_single['subtype']=='team2']['field'].values[0]
+# team1_mapping= ['team1_p'+str(i) for i in range(1,12)]
+# team2_mapping= ['team2_p'+str(i) for i in range(1,12)]
 
 
-df_info_single.loc[~(df_info_single['player'].isnull())&(df_info_single['field']==team1_nm),'subtype']= team1_mapping
-df_info_single.loc[~(df_info_single['player'].isnull())&(df_info_single['field']==team2_nm),'subtype']= team2_mapping
+# df_info_single.loc[~(df_info_single['player'].isnull())&(df_info_single['field']==team1_nm),'subtype']= team1_mapping
+# df_info_single.loc[~(df_info_single['player'].isnull())&(df_info_single['field']==team2_nm),'subtype']= team2_mapping
 
-df_info_single.loc[~(df_info_single['player'].isnull()),'field']=df_info_single.loc[~(df_info_single['player'].isnull()),'player']
-df_info_single.drop('player',axis=1,inplace=True)
+# df_info_single.loc[~(df_info_single['player'].isnull()),'field']=df_info_single.loc[~(df_info_single['player'].isnull()),'player']
+# df_info_single.drop('player',axis=1,inplace=True)
 #%%
 team1_mapping= ['team1_p'+str(i) for i in range(1,12)]
 team2_mapping= ['team2_p'+str(i) for i in range(1,12)]
