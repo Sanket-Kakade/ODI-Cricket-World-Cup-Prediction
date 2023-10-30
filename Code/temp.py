@@ -11,6 +11,9 @@ import os
 import glob
 
 #%%
+icc_tournamet_winners_data= 'K:\\Sanket-datascience\\CWC_prediction\\Data\\icc_tournaments_winners_list.csv'
+df_icc_winners= pd.read_csv(icc_tournamet_winners_data, encoding='unicode_escape')
+
 all_odi_data_loc= "K:\\Sanket-datascience\\CWC_prediction\\Data\\odis_male_csv2\\"
 all_cwc_data_loc= 'K:\\Sanket-datascience\\CWC_prediction\\Data\\icc_mens_cricket_world_cup_male_csv2\\'
 
@@ -127,7 +130,16 @@ dict_stadium_cty_map= {'Pallekele International Cricket Stadium':'Sri Lanka',
 'Bulawayo Athletic Club':'Zimbabwe',
 'Galle International Stadium':'Sri Lanka'} 
 
+
 df_odi_info2['country_corrected'] = df_odi_info2['country_corrected'].fillna(df_odi_info2['venue'].map(dict_stadium_cty_map))
 df_odi_info2.rename({'country_corrected':'host_cty'}, axis=1, inplace=True)
 df_odi_info2.to_pickle('K:\Sanket-datascience\CWC_prediction\odi_results.pkl')
-    
+#%%
+df_icc_winners= df_icc_winners.drop(df_icc_winners[(df_icc_winners['Year']==2002)&(df_icc_winners['Tournament']=='Champions Trophy')].index)
+add_rows= {'Year':[2002,2002], 'Winner':['India','Sri Lanka'], 'Runner-up':['',''],'Tournament':['Champions Trophy','Champions Trophy']}
+df_add_rows= pd.DataFrame.from_dict(add_rows, orient='index').T
+df_icc_winners= df_icc_winners.append(df_add_rows, ignore_index = True)
+# df_icc_winners.groupby(['Year','Winner','Tournament']).count().reset_index()
+# df_icc_winners.pivot_table(index='Year',columns='Winner')
+# tmp_df['win_vs_top_eight_cum'] = tmp_df['win_vs_top_eight_flag'].shift().cumsum()
+
