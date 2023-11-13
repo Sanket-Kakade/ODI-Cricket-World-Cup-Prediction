@@ -11,7 +11,7 @@ info,venue,"Boland Bank Park, Paarl"
 info,city,Paarl
 info,toss_winner,Netherlands
 info,toss_decision,field
-info,player_of_match,Mohammad Yousuf
+info,player_of_match,Yousuf Youhana
 info,umpire,S Venkataraghavan
 info,umpire,SA Bucknor
 info,tv_umpire,TH Wijewardene
@@ -22,7 +22,7 @@ info,player,Pakistan,Taufeeq Umar
 info,player,Pakistan,Saeed Anwar
 info,player,Pakistan,Abdul Razzaq
 info,player,Pakistan,Inzamam-ul-Haq
-info,player,Pakistan,Mohammad Yousuf
+info,player,Pakistan,Yousuf Youhana
 info,player,Pakistan,Saleem Elahi
 info,player,Pakistan,Rashid Latif
 info,player,Pakistan,Wasim Akram
@@ -51,7 +51,6 @@ info,registry,people,J Smits,7c681ee9
 info,registry,people,JJ Esmeijer,21231130
 info,registry,people,KJJ van Noortwijk,101d1e85
 info,registry,people,LP van Troost,34d2ca48
-info,registry,people,Mohammad Yousuf,e237b28c
 info,registry,people,NA Statham,0db94786
 info,registry,people,RP Lefebvre,12b59324
 info,registry,people,Rashid Latif,d32782ae
@@ -66,3 +65,4 @@ info,registry,people,TH Wijewardene,6a6be119
 info,registry,people,Taufeeq Umar,c73bb037
 info,registry,people,Waqar Younis,d8906a73
 info,registry,people,Wasim Akram,126e56a1
+info,registry,people,Yousuf Youhana,e237b28c
