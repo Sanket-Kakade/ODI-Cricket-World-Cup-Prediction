@@ -22,7 +22,6 @@ raw_data['team_2_new'] = np.maximum(raw_data['team_1'], raw_data['team_2'])
 raw_data['team_1']= raw_data['team_1_new']
 raw_data['team_2']= raw_data['team_2_new']
 raw_data.drop(['team_1_new','team_2_new'],axis=1,inplace=True)
-# raw_data_latest= raw_data[raw_data['date']>='2015/02/14'].reset_index(drop=True).sort_values('date')
 raw_data_latest= raw_data.copy().sort_values('date')
 teams_ls= sorted(list(pd.unique(raw_data_latest[['team_1', 'team_2']].values.ravel('K'))))
 # top_eight_teams_ls= ['South Africa','Australia','New Zealand','England','India','Pakistan','Sri Lanka','West Indies']
@@ -193,6 +192,7 @@ for i in teams_ls:
         single_df['team_1_win_flag']= np.where(single_df['winner']==i,1,0)
         single_df['team_2_win_flag']= np.where(single_df['winner']==j,1,0)
 
+
         single_df['team_1_win_cum'] = single_df['team_1_win_flag'].shift().cumsum()
         single_df['team_2_win_cum'] = single_df['team_2_win_flag'].shift().cumsum()
         
@@ -260,7 +260,7 @@ for i in teams_ls:
 # team_win_loss_pct_in_cty.columns= ['team','host_cty','team_win_pct_in_cty']
 #### TODO: Toss winning impact on winning the match. Win loss ratio.
 #### TODO: bat first, bat second record
-
+#%%
 #%%
 #Merging and renaming the columns.
 raw_data_latest1= pd.merge(raw_data_latest, team_feats_df, left_on= ['team_1','date'], right_on=['team','date'], how='left')
@@ -301,11 +301,21 @@ raw_data_latest3['bat_first_flag_team_1']= np.where(raw_data_latest3['bat_first_
 
 #%%
 raw_data_latest4= pd.merge(raw_data_latest3,head_to_head_win_loss_pct, left_on=['team_1', 'team_2','date'], right_on=['team_1','team_2','date']  )
-raw_data_latest5= pd.merge(raw_data_latest4,team_win_loss_pct_in_cty, left_on=['team_1','host_cty','date'], right_on=['team','host_cty','date']  )
+raw_data_latest41= pd.merge(raw_data_latest4,team_win_loss_pct_in_cty, left_on=['team_1','host_cty','date'], right_on=['team','host_cty','date']  )
+raw_data_latest41.rename({'win_ratio_in_cty':'team_1_win_ratio_in_cty'},axis=1,inplace=True)
+
+raw_data_latest5= pd.merge(raw_data_latest41,team_win_loss_pct_in_cty, left_on=['team_2','host_cty','date'], right_on=['team','host_cty','date']  )
+raw_data_latest5.rename({'win_ratio_in_cty':'team_2_win_ratio_in_cty'},axis=1,inplace=True)
+raw_data_latest5.drop(['team_x','team_y'],axis=1,inplace=True)
 
 #%%
 non_nation_cty= ['Africa XI','Asia XI','ICC World XI']
-raw_data_latest6= raw_data_latest5[~(raw_data_latest5['team1_team'].isin(non_nation_cty))&~(raw_data_latest5['team2_team'].isin(non_nation_cty))]
+wc23_cty= ['India','Sri Lanka','Australia','England','Pakistan','West Indies','South Africa','New Zealand ', 
+'Bangladesh','Zimbabwe','Ireland','Afghanistan','Scotland','United Arab Emirates',
+'Netherlands','Nepal','Papua New Guinea','United States of America']
+raw_data_latest51= raw_data_latest5[~(raw_data_latest5['team1_team'].isin(non_nation_cty))&~(raw_data_latest5['team2_team'].isin(non_nation_cty))]
+raw_data_latest6= raw_data_latest51[(raw_data_latest51['team1_team'].isin(wc23_cty))&(raw_data_latest51['team2_team'].isin(wc23_cty))]
+# raw_data_latest6= raw_data_latest51.copy()
 #%%
 raw_data_latest7 = pd.get_dummies(raw_data_latest6, columns=['team_1','team_2' ])
 
@@ -314,8 +324,8 @@ raw_data_latest7 = pd.get_dummies(raw_data_latest6, columns=['team_1','team_2' ]
 # cols_to_drop = ['team_1', 'team_2', 'event', 'venue', 'city', 'toss_winner','toss_decision', 'winner', 'winner_wickets', 'match_id', 'winner_runs',
 #        'outcome', 'host_cty','team1_team','team2_team','team']
 cols_to_drop = ['event', 'venue', 'city', 'toss_winner','toss_decision', 'winner', 'winner_wickets', 'match_id', 'winner_runs',
-       'outcome', 'host_cty','bat_first_team','team1_team','team2_team','team']
+       'outcome', 'host_cty','bat_first_team','team1_team','team2_team']
 
 raw_data_latest8= raw_data_latest7.drop(cols_to_drop,axis=1,inplace=False)
 #%%
-raw_data_latest8.to_pickle('K:\\Sanket-datascience\\CWC_prediction\\Data\\feat_df.pkl')
+raw_data_latest8.to_pickle('K:\\Sanket-datascience\\CWC_prediction\\Data\\feat_df_more_mts.pkl')

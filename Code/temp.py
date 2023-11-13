@@ -14,7 +14,7 @@ import glob
 icc_tournamet_winners_data= 'K:\\Sanket-datascience\\CWC_prediction\\Data\\icc_tournaments_winners_list.csv'
 df_icc_winners= pd.read_csv(icc_tournamet_winners_data, encoding='unicode_escape')
 
-all_odi_data_loc= "K:\\Sanket-datascience\\CWC_prediction\\Data\\odis_male_csv2\\"
+all_odi_data_loc= "K:\\Sanket-datascience\\CWC_prediction\\Data\\odis_male_csv2 (1)\\"
 all_cwc_data_loc= 'K:\\Sanket-datascience\\CWC_prediction\\Data\\icc_mens_cricket_world_cup_male_csv2\\'
 
 ls_odi_info_files= glob.glob(all_odi_data_loc+'*info.csv')
@@ -103,7 +103,7 @@ city_cty_map= city_cty_map[['city','country']].drop_duplicates()
 city_cty_map_final= pd.merge(df_city,city_cty_map,how='left', left_on='city',right_on='city')
 city_cty_map_final.to_csv('city_cty_map.csv')
 #%%
-city_cty_map_final= pd.read_csv('K:\Sanket-datascience\CWC_prediction\city_cty_map_corrected.csv', index_col=0)
+city_cty_map_final= pd.read_csv('K:\Sanket-datascience\CWC_prediction\Data\city_cty_map_corrected.csv', index_col=0)
 city_cty_map_final= city_cty_map_final[~city_cty_map_final['country_corrected'].isnull()]
 city_cty_map_final= city_cty_map_final[['city','country_corrected']].drop_duplicates()
 
@@ -135,11 +135,11 @@ df_odi_info2['country_corrected'] = df_odi_info2['country_corrected'].fillna(df_
 df_odi_info2.rename({'country_corrected':'host_cty'}, axis=1, inplace=True)
 df_odi_info2.to_pickle('K:\Sanket-datascience\CWC_prediction\odi_results.pkl')
 #%%
-df_icc_winners= df_icc_winners.drop(df_icc_winners[(df_icc_winners['Year']==2002)&(df_icc_winners['Tournament']=='Champions Trophy')].index)
-add_rows= {'Year':[2002,2002], 'Winner':['India','Sri Lanka'], 'Runner-up':['',''],'Tournament':['Champions Trophy','Champions Trophy']}
-df_add_rows= pd.DataFrame.from_dict(add_rows, orient='index').T
-df_icc_winners= df_icc_winners.append(df_add_rows, ignore_index = True)
-# df_icc_winners.groupby(['Year','Winner','Tournament']).count().reset_index()
-# df_icc_winners.pivot_table(index='Year',columns='Winner')
-# tmp_df['win_vs_top_eight_cum'] = tmp_df['win_vs_top_eight_flag'].shift().cumsum()
+# df_icc_winners= df_icc_winners.drop(df_icc_winners[(df_icc_winners['Year']==2002)&(df_icc_winners['Tournament']=='Champions Trophy')].index)
+# add_rows= {'Year':[2002,2002], 'Winner':['India','Sri Lanka'], 'Runner-up':['',''],'Tournament':['Champions Trophy','Champions Trophy']}
+# df_add_rows= pd.DataFrame.from_dict(add_rows, orient='index').T
+# df_icc_winners= df_icc_winners.append(df_add_rows, ignore_index = True)
+# # df_icc_winners.groupby(['Year','Winner','Tournament']).count().reset_index()
+# # df_icc_winners.pivot_table(index='Year',columns='Winner')
+# # tmp_df['win_vs_top_eight_cum'] = tmp_df['win_vs_top_eight_flag'].shift().cumsum()
 
