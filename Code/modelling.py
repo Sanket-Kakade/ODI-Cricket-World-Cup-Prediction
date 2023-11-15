@@ -25,7 +25,9 @@ from sklearn.metrics import roc_auc_score
 import sys
 tf.keras.utils.set_random_seed(1)
 tf.config.experimental.enable_op_determinism()
-
+from hyperopt import space_eval
+import xgboost as xgb
+import pickle
 #%%
 all_odi_data_loc= "K:\\Sanket-datascience\\CWC_prediction\\Data\\"
 all_odi_data_file= "feat_df_more_mts.pkl"
@@ -65,6 +67,9 @@ x_train,x_test, y_train, y_test= train_test_split(feat_data2.drop('winner_le',ax
 # test.drop('date',axis=1,inplace=True)
 # x_train,y_train=  train.drop('winner_le',axis=1), train[['winner_le']]
 # x_test, y_test= test.drop('winner_le',axis=1), test[['winner_le']]
+col_seq= x_train.columns
+with open('K:\\Sanket-datascience\\CWC_prediction\\Data\\prediction_related_data\\col_seq.pkl', 'wb') as f:
+    pickle.dump(col_seq, f)
 
 #%%
 lr= LogisticRegression(max_iter=10000, penalty='l1', solver='liblinear',random_state=5)
@@ -77,8 +82,6 @@ print(accuracy_score(y_train, y_train_pred))
 
 print(f1_score(y_test, y_pred))
 print(accuracy_score(y_test, y_pred))
-#%%
-
 #%%
 coef_l1= lr.coef_.ravel()
 feats= x_train.columns.values.ravel()
@@ -216,7 +219,6 @@ print('best: ', best)
 
 
 #%%
-from hyperopt import space_eval
 best_param_nn= space_eval(space, best)
 
 # best_param_nn= {'activation': 'relu',
@@ -277,113 +279,129 @@ plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
 plt.show()
 #%%
-import xgboost as xgb
 
-dtrain = xgb.DMatrix(x_train, label=y_train)
-dvalid = xgb.DMatrix(x_test, label=y_test)
+# dtrain = xgb.DMatrix(x_train, label=y_train)
+# dvalid = xgb.DMatrix(x_test, label=y_test)
 
 space_xgb = {
-        'num_boost_round': scope.int(hp.quniform('num_boost_round', 100, 1000,25)),
-        'eta': hp.quniform('eta', 1e-5, 0.1, 0.002),
-        'max_depth':  scope.int(hp.quniform('max_depth', 1,7,1)),
-        'min_child_weight': scope.int(hp.quniform('min_child_weight', 1, 6,1)),
-        'subsample': hp.quniform('subsample', 0.5, 1, 0.05),
-        'gamma': hp.quniform('gamma', 0.5, 1, 0.05),
-        'colsample_bytree': hp.quniform('colsample_bytree', 0.5, 1, 0.05),
-        'eval_metric': 'auc',
-        'objective': hp.choice('objective',['binary:logistic','binary:hinge']),
-        'nthread': 4,
-        'booster': 'gbtree',
-        'tree_method': 'exact',
-        'silent': 1,
-        'seed': 5
+        # 'num_boost_round': scope.int(hp.quniform('num_boost_round', 100, 1000,25)),
+        # 'eta': hp.quniform('eta', 1e-5, 0.1, 0.002),
+        # 'max_depth':  scope.int(hp.quniform('max_depth', 1,7,1)),
+        # 'min_child_weight': scope.int(hp.quniform('min_child_weight', 1, 6,1)),
+        # 'subsample': hp.quniform('subsample', 0.5, 1, 0.05),
+        # 'gamma': hp.quniform('gamma', 0.5, 1, 0.05),
+        # 'colsample_bytree': hp.quniform('colsample_bytree', 0.5, 1, 0.05),
+        # 'eval_metric': 'auc',
+        # 'objective': hp.choice('objective',['binary:logistic','binary:hinge']),
+        # 'nthread': 4,
+        # 'booster': 'gbtree',
+        # 'tree_method': 'exact',
+        # 'silent': 1,
+        # 'seed': 5
+        'max_depth': scope.int(hp.quniform("max_depth", 2,6,1)),
+        'eta':hp.uniform('eta', 1e-3,5e-1),
+        'gamma': hp.uniform ('gamma', 0.5,9),
+        'colsample_bytree' : hp.uniform('colsample_bytree', 0.1,1),
+        'min_child_weight' : scope.int(hp.quniform('min_child_weight', 0, 10, 1)),
+        'n_estimators': hp.choice("n_estimators", np.arange(30,400,20)),
+        'seed': 5,
+        'objective':'binary:logistic'
         }
 def f_xgb(params):
+    gbm_model = xgb.XGBClassifier(max_depth = space_xgb['max_depth'],min_child_weight=space_xgb['min_child_weight'],
+                colsample_bytree=space_xgb['colsample_bytree'],eta=space_xgb['eta'] ,gamma=space_xgb['gamma'])
 
-    gbm_model = xgb.train(params, dtrain,num_boost_round= params['num_boost_round'],verbose_eval=False)
-    predictions = gbm_model.predict(dvalid,ntree_limit=gbm_model.best_iteration + 1)
-    score = roc_auc_score(y_test, predictions)
+    evaluation = [( x_train, y_train), ( x_test, y_test)]
+    gbm_model.fit(x_train, y_train,eval_set=evaluation, eval_metric="logloss",early_stopping_rounds=50,verbose=False)
+    # gbm_model = xgb.train(params, dtrain,num_boost_round= params['num_boost_round'],verbose_eval=False)
+    predictions = gbm_model.predict(x_test)
+    score = accuracy_score(y_test, predictions)
     loss = 1 - score
-    print('AUC:', score)
+    print('Valid Acc:', score)
 
     return {'loss': loss, 'status': STATUS_OK}
 
 trials_xgb = Trials()
-best_xgb = fmin(f_xgb, space_xgb, algo=tpe.suggest, max_evals=800,trials=trials_xgb)
+best_xgb = fmin(f_xgb, space_xgb, algo=tpe.suggest, max_evals=100,trials=trials_xgb)
 
 best_xgb_param_dic= space_eval(space_xgb, best_xgb)
 #%%
-best_xgb_param_dic= {
-    'booster': 'gbtree',
- 'colsample_bytree': 0.75,
- 'eta': 0.00002,
- 'eval_metric': 'auc',
- 'gamma': 0.0,
- 'max_depth': 4,
+# best_xgb_param_dic= {
+#     'booster': 'gbtree',
+#  'colsample_bytree': 0.75,
+#  'eta': 0.00002,
+#  'eval_metric': 'auc',
+#  'gamma': 0.0,
+#  'max_depth': 4,
+#  'min_child_weight': 2,
+#  'nthread': 4,
+#  'num_boost_round': 1000,
+#  'objective': 'binary:logistic',
+#  'seed': 5,
+#  'silent': 1,
+#  'subsample': 0.8,
+#  'tree_method': 'exact'}
+
+
+best_xgb_param_dic= {'colsample_bytree': 0.8912152726779934,
+ 'eta': 0.22972120979175997,
+ 'gamma': 7.095809473135031,
+ 'max_depth': 6,
  'min_child_weight': 2,
- 'nthread': 4,
- 'num_boost_round': 1000,
+ 'n_estimators': 290,
  'objective': 'binary:logistic',
- 'seed': 5,
- 'silent': 1,
- 'subsample': 0.8,
- 'tree_method': 'exact'}
+ 'seed': 5}
+
 #%%
-gbm_model = xgb.train(best_xgb_param_dic, dtrain,verbose_eval=True)
-y_pred_proba_xgb= gbm_model.predict(dvalid)#ntree_limit=gbm_model.best_iteration + 1)
-y_train_pred_proba = gbm_model.predict(dtrain)#,ntree_limit=gbm_model.best_iteration + 1)
-# round predictions 
-y_pred = np.round(y_pred_proba_xgb)
-y_train_pred = np.round(y_train_pred_proba)
+# gbm_model = xgb.train(best_xgb_param_dic, dtrain,verbose_eval=True)
+gbm_model = xgb.XGBClassifier(objective='binary:logistic',max_depth = best_xgb_param_dic['max_depth'],
+           min_child_weight=best_xgb_param_dic['min_child_weight'],colsample_bytree=best_xgb_param_dic['colsample_bytree'],
+           eta=best_xgb_param_dic['eta'] ,gamma=best_xgb_param_dic['gamma'])
+gbm_model.fit(x_train,y_train)
 
-
-print ("XGB Hyper")
-
+y_pred= gbc.predict(x_test)
+y_train_pred= gbc.predict(x_train)
+print ("XGB")
 print(f1_score(y_train, y_train_pred))
 print(accuracy_score(y_train, y_train_pred))
 print(f1_score(y_test, y_pred))
 print(accuracy_score(y_test, y_pred))
-print (roc_auc_score(y_test, y_pred_proba_xgb))
+# print (roc_auc_score(y_test, y_pred_proba_xgb))
 
 #%%
 from sklearn.ensemble import VotingClassifier
 model1 = lr
 model2= svc
-model3= rf
-model = VotingClassifier(estimators=[('lr', model1),('svc',model2)], voting='soft')
+model3 =rf
+model4= gbm_model
+model = VotingClassifier(estimators=[('lr', model1),('svc',model2),('rf',model3),('xgb',model4)], voting='soft')
 model.fit(x_train,y_train)
+####WAIT here, fix this with xgb
 
+y_pred_ens= model.predict(x_test)
+# y_pred_nn= ho_model.predict(x_test,)
+y_train_pred_ens= model.predict(x_train)
+# y_train_pred_nn= ho_model.predict(x_train)
 
-y_pred_ens= model.predict_proba(x_test,)
-y_pred_nn= ho_model.predict(x_test,)
-y_pred_xgb= gbm_model.predict(dvalid)
+# y_train_pred_comb= np.array([y_train_pred_ens[:,1],y_train_pred_xgb[:]]).T
 
-y_train_pred_ens= model.predict_proba(x_train)
-y_train_pred_nn= ho_model.predict(x_train)
+# y_train_pred_comb= np.average(y_train_pred_comb,axis=1)
 
-y_train_pred_xgb= gbm_model.predict(dtrain)
-
-y_train_pred_comb= np.array([y_train_pred_ens[:,1],y_train_pred_nn[:,0],y_train_pred_xgb[:]]).T
-y_train_pred_comb= np.array([y_train_pred_ens[:,1],y_train_pred_xgb[:]]).T
-
-y_train_pred_comb= np.average(y_train_pred_comb,axis=1)
-
-y_pred_comb= np.array([y_pred_ens[:,1],y_pred_nn[:,0],y_pred_xgb[:]]).T
-y_pred_comb= np.array([y_pred_ens[:,1],y_pred_xgb[:]]).T
-y_pred_comb= np.average(y_pred_comb,axis=1)
-y_pred_comb = np.round(y_pred_comb)
-y_train_pred_comb = np.round(y_train_pred_comb)
+# # y_pred_comb= np.array([y_pred_ens[:,1],y_pred_nn[:,0],y_pred_xgb[:]]).T
+# y_pred_comb= np.array([y_pred_ens[:,1],y_pred_xgb[:]]).T
+# y_pred_comb= np.average(y_pred_comb,axis=1)
+# y_pred_comb = np.round(y_pred_comb)
+# y_train_pred_comb = np.round(y_train_pred_comb)
 
 
 print ("Ens")
 
-print(f1_score(y_train, y_train_pred_comb))
-print(accuracy_score(y_train, y_train_pred_comb))
-print(f1_score(y_test, y_pred_comb))
-print(accuracy_score(y_test, y_pred_comb))
+print(f1_score(y_train, y_train_pred_ens))
+print(accuracy_score(y_train, y_train_pred_ens))
+print(f1_score(y_test, y_pred_ens))
+print(accuracy_score(y_test, y_pred_ens))
 #%%
 # Saving models
-import pickle   
 pickle_out1 = open("K:\Sanket-datascience\CWC_prediction\Models\lr_model.pkl", "wb")    
 pickle.dump(lr, pickle_out1)    
 pickle_out1.close()
@@ -393,3 +411,6 @@ pickle_out2.close()
 pickle_out3 = open("K:\Sanket-datascience\CWC_prediction\Models\gbm_model.pkl", "wb")    
 pickle.dump(gbm_model, pickle_out3)    
 pickle_out3.close()
+pickle_out4 = open("K:\\Sanket-datascience\\CWC_prediction\\Models\\rf_model.pkl", "wb")    
+pickle.dump(rf, pickle_out4)    
+pickle_out4.close()
