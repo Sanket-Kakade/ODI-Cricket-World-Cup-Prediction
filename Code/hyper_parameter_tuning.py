@@ -5,6 +5,7 @@ Created on Tue Oct 24 23:37:37 2023
 @author: sanket
 """
 import matplotlib.pyplot as plt
+import seaborn as sns
 import numpy as np
 from sklearn.model_selection import train_test_split
 import pandas as pd
@@ -33,6 +34,8 @@ all_odi_data_file= "feat_df.pkl"
 feat_data= pd.read_pickle(all_odi_data_loc+all_odi_data_file)
 feat_data2= feat_data[feat_data['date']>'2015/1/1']
 feat_data2.drop('date',axis=1,inplace=True)
+#%%
+feat_data2.to_excel(all_odi_data_loc+'feat_df.xlsx')
 #%%
 
 feat_data2.fillna(0,inplace=True)
@@ -334,7 +337,7 @@ model = VotingClassifier(estimators=[('lr', model1),('svc',model2)], voting='sof
 model.fit(x_train,y_train)
 
 
-y_pred_ens= model.predict_proba(x_test,)
+y_pred_ens= model.predict_proba(x_test)
 y_pred_nn= ho_model.predict(x_test,)
 y_pred_xgb= gbm_model.predict(dvalid)
 
