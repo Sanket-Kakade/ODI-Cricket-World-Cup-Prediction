@@ -13,7 +13,21 @@ from PIL import Image
 # import streamlit.web.cli as stcli
 from streamlit.web.cli import main
 #%%
-st.title("Top batter and bowler of the World Cup")
+#st.title("Top batter and bowler of the World Cup")
+st.markdown("""
+    <style>
+    .heading {
+    
+        font-size:50px !important;
+        text-align: center;
+        font-weight: bold;
+        
+    }
+    </style>
+    """,unsafe_allow_html=True)
+
+st.markdown('''<p class="heading"> Top batter and bowler of the WC </p>''', unsafe_allow_html=True)
+
 st.sidebar.header("Top Batter and Bowler prediction")
 
 sf_teams_ls= ['India','South Africa','New Zealand','Australia']
@@ -40,7 +54,14 @@ fin1= st.selectbox("Select 1st finalist", ['India', "Australia", "New Zealand","
 fin2= st.selectbox("Select 2nd finalist", ['India', "Australia", "New Zealand","South Africa"])
 if st.button("Predict the top players"):  
     top_batter,top_bowler,top_score,top_wickets= prediction(fin1,fin2)  
-    st.write('Highest run scorer of the tournament: ', str(top_batter), 'with ',str(top_score),'runs')  
-    st.write('Highest wicket taker of the tournament: ', str(top_bowler), 'with ',str(top_wickets),'wickets')  
-
+    #st.write('Highest run scorer of the tournament: ', str(top_batter), 'with ',str(top_score),'runs')  
+    #st.write('Highest wicket taker of the tournament: ', str(top_bowler), 'with ',str(top_wickets),'wickets') 
+    batter_str= f"""
+        ##### <span> Highest run scorer of the tournament: {str(top_batter)} with {str(top_score)} runs</span>
+        """
+    bowler_str = f"""
+        ##### <span> Highest wicket taker of the tournament: {str(top_bowler)} with {str(top_wickets)} wickets </span>  
+        """
+    st.markdown(batter_str, unsafe_allow_html=True)
+    st.markdown(bowler_str, unsafe_allow_html=True)
 top_batter,top_bowler,top_score,top_wickets= prediction(fin1,fin2)

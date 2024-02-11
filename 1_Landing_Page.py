@@ -14,10 +14,20 @@ from PIL import Image
 # import streamlit.web.cli as stcli
 from streamlit.web.cli import main
 #%%
+def change_label_style(label, font_size='12px', font_color='white', font_family='sans-serif'):
+    html = f"""
+    <script>
+        var elems = window.parent.document.querySelectorAll('p');
+        var elem = Array.from(elems).find(x => x.innerText == '{label}');
+        elem.style.fontSize = '{font_size}';
+        elem.style.color = '{font_color}';
+        elem.style.fontFamily = '{font_family}';
+    </script>
+    """
+    st.components.v1.html(html)
+#%%
+st.set_page_config(page_title="World Cup Prediction App",page_icon=":trophy:",layout='wide')
 
-st.set_page_config(page_title="World Cup Prediction App",page_icon=":trophy:")
-
-st.title("Welcome to World Cup prediction app! :trophy:")
 title_alignment="""
 <style>
 Welcome to World Cup prediction app! :trophy:{
@@ -25,24 +35,43 @@ Welcome to World Cup prediction app! :trophy:{
 }
 </style>
 """
-st.markdown(title_alignment, unsafe_allow_html=True)
+st.markdown("""
+<style>
+.heading {
+
+    font-size:50px !important;
+    text-align: center;
+    font-weight: bold;
+    
+}
+.text{
+      font-size:25px !important;
+      text-align: center;}
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown('''<p class="heading"> Welcome to World Cup prediction app! &#127942 </p>''', unsafe_allow_html=True)
+#st.markdown(title_alignment, unsafe_allow_html=True)
 st.markdown(
     """
-This application predicts the winner of the ongoing ICC cricket World Cup 2023 being held in India. 
-"""
+    <p class="text"> 
+This application predicts the winner of the ICC cricket World Cup 2023 being held in India.
+     </p>
+""",unsafe_allow_html=True
 )
 st.markdown(
     """
-The underneath AI model is built considering the matches till league stage of the tournament i.e. matches till 14th Nov are considered for prediction. 
-"""
+    <p class="text"> 
+The underneath AI model is built on the data from historinc matches since 2000.
+    </p> 
+""",unsafe_allow_html=True
 )
 
-# image = Image.open('K:\Sanket-datascience\CWC_prediction\Code\captains_photo.jpg')
 image = Image.open('.\Code\captains_photo.jpg')
 
-left_co, cent_co,last_co = st.columns(3)
-with left_co:
-    st.image(image, caption=None, width=700, use_column_width=None, clamp=False, channels="RGB", output_format="auto")
+first_co, sec_co,third_col = st.columns([2, 5, 2])
+with sec_co:
+    st.image(image, caption=None, width=250 , use_column_width=True, clamp=False, channels="RGB", output_format="auto")
 
 #%%
 # # Load the trained model  

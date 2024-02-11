@@ -106,37 +106,49 @@ def prediction1(model_input):
 
 
     return y_pred,pred_proba
-def main():  
+#%%
 
+def main():  
     st.set_page_config(page_title="Winners Prediction", page_icon=":sharks:")
     st.sidebar.header("Winners Prediction")
+    st.markdown("""
+        <style>
+        .heading {
+        
+            font-size:50px !important;
+            text-align: center;
+            font-weight: bold;
+            
+        }
+        </style>
+        """,unsafe_allow_html=True)
 
-    st.title("CWC 23 Prediction")  
-
+    st.markdown('''<p class="heading"> Winner Prediction </p>''', unsafe_allow_html=True)
+    
     html_temp = """  
-    <div style="background-color: #4684af; padding: 16px">  
-    <h2 style="color: #000000; text-align: center;">Enter the inputs below</h2>  
+    <div style="background-color: #4684af; padding: 0px">  
+    <h3 style="color: #000000; text-align: center;">Select the playing teams & other details</h2>  
     </div>  
     """  
   
     st.markdown(html_temp, unsafe_allow_html=True)  
-  
-    # sepal_length1 = st.text_input("Team 1", "Type Here") 
-    team_1= st.selectbox("Select 1st team", ['India', "Australia", "New Zealand","South Africa"])
-    # sepal_width1 = st.text_input("Team 2", "Type Here") 
-    team_2= st.selectbox("Select 2nd team", ['India', "Australia", "New Zealand","South Africa"])  
-    
+    cols = st.columns(2)
+    team_ls= ['India', "Australia", "New Zealand","South Africa","West Indies"]
+    team_1= cols[0].selectbox("Select 1st team", team_ls)
+    team_ls2=[i for i in team_ls if i!=team_1]
+    team_2= cols[1].selectbox("Select 2nd team",team_ls2)
+    cols = st.columns(2)
+    host_cty= cols[0].selectbox("Select host nation", ['New Zealand', 'Australia', 'South Africa','Bangladesh','Sri Lanka','England', 'Pakistan', 'India'])
+    event_nm= cols[1].selectbox("Select the event name", ["ICC Cricket World Cup", "Bilateral"])
     toss_winner = st.selectbox("Toss won by", [team_1,team_2])  
     toss_decision = st.selectbox("Toss decision",['Bat','Field'] ).lower() 
-    ip_df= pd.DataFrame({'team_1':team_1,'team_2':team_2, 'team_2':'India','toss_winner':toss_winner,'toss_decision':toss_decision},index=[0])
-
 # team_1= 'India'
 # team_2= 'New Zealand'
 # toss_winner='New Zealand'
 # toss_decision= 'Bat'.lower()
     ip_df= pd.DataFrame({'team_1':team_1,'team_2':team_2,'toss_winner':toss_winner,'toss_decision':toss_decision},index=[0])
-    ip_df['host_cty']='India'
-    ip_df['event']='ICC Cricket World Cup'
+    ip_df['host_cty']=host_cty
+    ip_df['event']=event_nm
     ip_df['team_1_new'] = np.minimum(ip_df['team_1'], ip_df['team_2'])
     ip_df['team_2_new'] = np.maximum(ip_df['team_1'],ip_df['team_2'])
     ip_df['team_1']= ip_df['team_1_new']
@@ -144,13 +156,27 @@ def main():
     ip_df.drop(['team_1_new','team_2_new'],axis=1,inplace=True)
     input_df= get_binary_feats(ip_df)
     input_df2= get_teams_features(input_df)
-    
+    team1= str(ip_df['team_1'].values[0])
+    team2= str(ip_df['team_2'].values[0])
     if st.button("Predict the winner"):     
         result,pred_proba = prediction1(input_df2)
+        result_str0 = f"""
+            #### <span> The winner could be {team1}</span>
+            """
+        result_str1 = f"""
+            #### <span> The winner could be {team2}</span>  
+            """
+        pred_prob = f"""
+         ##### <span> Prediction Confidence {str(np.round(pred_proba*100))+'%'}</span>  
+         """
         if result ==0:
-            st.write('The winner could be ', str(ip_df['team_1'].values[0]))  
-        else: st.write('The winner could be ', str(ip_df['team_2'].values[0]))
-        st.write("Prediction Probability", str(np.round(pred_proba*100))+'%')
+            #st.write('The winner could be ', str(ip_df['team_1'].values[0]))  
+            st.markdown(result_str0, unsafe_allow_html=True)
+        else: 
+            #st.write('The winner could be ', str(ip_df['team_2'].values[0]))
+            st.markdown(result_str1, unsafe_allow_html=True)
+        st.markdown(pred_prob, unsafe_allow_html=True)
+
 
 if __name__ == '__main__':  
     main()  
